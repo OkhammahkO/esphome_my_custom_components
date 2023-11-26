@@ -8,17 +8,17 @@ namespace esphome
 {
   namespace kogan_smart_toilet
   {
-    // Function              | Bits    | Count | Comment
-    // ----------------------|---------|-------|----------------------------------------------------
-    // Pronto Preamble       | 01-04   |    4  | Raw data, Carrier frequency (38031.13 Hz), 51 Burst Pairs in Sequence #1, No Sequence #2 (Repeat). Appears to be constant.
-    // Lead in burst pairs   | 05-08   |    4  | Assumed, unconfirmed. Appears to be constant.
-    // Address               | 09-24   |   16  | Included in checksum. Appears to be constant.
-    // Commands              | 25-88   |   64  | Included in checksum
-    // Checksum              | 89-104  |   16  | Sum of above, then modulo 256
-    // Lead out burst pairs  | 105-106 |    2  | Assumed, unconfirmed. Appears to be constant.
+    // Function               | Bits    | Count | Constant | In Checksum | Comment
+    // -----------------------|---------|-------|----------|-------------|----------------------------------------------------
+    // Pronto Preamble        | 01-04   |    4  | Yes      | No          |
+    // Lead in burst pairs    | 05-08   |    4  | Yes      | No          | Assumed function
+    // Address                | 09-24   |   16  | Yes      | Yes         | Appears to be constant
+    // Commands               | 25-88   |   64  | No       | Yes         | Included in checksum
+    // Checksum               | 89-104  |   16  | No       | No          | Sum of command bits, then modulo 256
+    // Lead out burst pairs   | 105-106 |    2  | Yes      | No          | Assumed function
 
     // Pronto Preamble
-    const std::array<uint8_t, 8> PREAMBLE_BITS_1_TO_4 = {0x00, 0x6D, 0x33, 0x00};
+    const std::array<uint8_t, 8> PREAMBLE_BITS_1_TO_4 = {0x00, 0x6D, 0x33, 0x00}; // Raw data, Carrier frequency (38031.13 Hz), 51 Burst Pairs in Sequence #1, No Sequence #2 (Repeat).
 
     // Lead-in Burst Pairs
     const std::array<uint8_t, 8> LEAD_IN_BURST_PAIRS_BITS_5_TO_8 = {0x74, 0x75, 0x74, 0xAA};
