@@ -35,7 +35,12 @@ namespace esphome
     // | Idle Mode                    | 25-26         | 2         | ON if rear, front, dry NOT enabled (after stop button). Required to start some of the presets (Child, Super, etc)
     // | UNKNOWN_BITS_27_AND_28       | 27-28         | 2         | Unknown. Always 1. Could relate to presets, power, or seated (not in app but avaible in scenes?)
     // | Cleaning Mode                | 31-40         | 10        | self_clean, rear, female, dry, auto_wash. Presets not in app: powerful_wash, child, lady_care, rear_massage, female_massage
-    // | Spray Water Temp             | 27-28         | 2         | Four levels. Level 1 is room temp (no heating). L2 = Target temp 33°C (per manual), L3 = 36°C, L4 = 39°C
+    // | Spray Water Temp             | 41-48         | 2         | Four levels. Level 1 is room temp (no heating). L2 = Target temp 33°C (per manual), L3 = 36°C, L4 = 39°C
+    // | Light                        | 49-50         | 2         | Bowl LED On or Off
+    // |                              |               |           |
+    // |                              |               |           |
+    // |                              |               |           |
+    // |                              |               |           |
 
     // Idle Mode
     const std::array<uint8_t, 2> IDLE_MODE_BITS_25_AND_26_ON = {0x14, 0x40};
@@ -52,16 +57,14 @@ namespace esphome
     const std::array<uint8_t, 10> CLEANING_MODE_BITS_31_TO_40_SELF_CLEAN = {0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x40};
 
     // Spray Water Temperature Level
-    const std::array<uint8_t, 8> WATER_TEMP_BITS_41_TO_48_LEVEL_1 = {0014, 0016, 0014, 0016, 0014, 0016, 0014, 0016};
-    const std::array<uint8_t, 8> WATER_TEMP_BITS_41_TO_48_LEVEL_2 = {0014, 0016, 0014, 0040, 0014, 0016, 0014, 0016};
-    const std::array<uint8_t, 8> WATER_TEMP_BITS_41_TO_48_LEVEL_3 = {0014, 0016, 0014, 0040, 0014, 0040, 0014, 0040};
-    const std::array<uint8_t, 8> WATER_TEMP_BITS_41_TO_48_LEVEL_4 = {0014, 0040, 0014, 0016, 0014, 0040, 0014, 0016};
+    const std::array<uint8_t, 8> WATER_TEMP_BITS_41_TO_48_LEVEL_1 = {0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x16};
+    const std::array<uint8_t, 8> WATER_TEMP_BITS_41_TO_48_LEVEL_2 = {0x14, 0x16, 0x14, 0x40, 0x14, 0x16, 0x14, 0x16};
+    const std::array<uint8_t, 8> WATER_TEMP_BITS_41_TO_48_LEVEL_3 = {0x14, 0x16, 0x14, 0x40, 0x14, 0x40, 0x14, 0x40};
+    const std::array<uint8_t, 8> WATER_TEMP_BITS_41_TO_48_LEVEL_4 = {0x14, 0x40, 0x14, 0x16, 0x14, 0x40, 0x14, 0x16};
 
-    // Occupacy Not Required Flag
-
-    // Fan Speed
-
-    // IR Transmission
+    // LED
+    const std::array<uint8_t, 2> LIGHT_49_AND_50_ON = {0x14, 0x16};
+    const std::array<uint8_t, 2> LIGHT_49_AND_50_OFF = {0x14, 0x40};
 
     // // State Frame size
     // const uint8_t DAIKIN_STATE_FRAME_SIZE = 19;
