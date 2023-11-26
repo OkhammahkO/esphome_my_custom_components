@@ -30,17 +30,20 @@ namespace esphome
     const std::array<uint8_t, 2> LEAD_OUT_BURST_PAIRS_BITS_105_AND_106 = {0x14, 0x81};
 
     // Command Structure
-    // | Short_Name                   | Bit Positions | Bit Count | Description
-    // | -----------------------------| --------------| --------- | ----------------------------------------------
-    // | Idle Mode                    | 25-26         | 2         | ON if rear, front, dry NOT enabled (after stop button). Required to start some of the presets (Child, Super, etc)
-    // | UNKNOWN_BITS_27_AND_28       | 27-28         | 2         | Unknown. Always 1. Could relate to presets, power, or seated (not in app but avaible in scenes?)
-    // | Cleaning Mode                | 31-40         | 10        | self_clean, rear, female, dry, auto_wash. Presets not in app: powerful_wash, child, lady_care, rear_massage, female_massage
-    // | Spray Water Temp             | 41-48         | 2         | Four levels. Level 1 is room temp (no heating). L2 = Target temp 33°C (per manual), L3 = 36°C, L4 = 39°C
-    // | Light                        | 49-50         | 2         | Bowl LED On or Off
-    // | UNKNOWN_BITS_51_AND_52       | 51-52         | 2         | Unknown. Always 0.
-    // | Cleaning Position            | 53-56         | 4         | 4 postions of cleaning wand extention. Works for Rear. Can't recall if tested for female.
-    // | Seat Temp                    | 57-64         | 8         | Four levels. Level 1 is room temp (no heating). L2 = Target temp 33°C (per manual), L3 = 36°C, L4 = 39°C
-    // |                              |               |           |
+    // | Short_Name                        | Bit Positions | Bit Count | Description
+    // | ----------------------------------| --------------| --------- | ----------------------------------------------
+    // | Idle Mode                         | 25-26         | 2         | ON if rear, front, dry NOT enabled (after stop button). Required to start some of the presets (Child, Super, etc)
+    // | UNKNOWN_BITS_27_AND_28            | 27-28         | 2         | Unknown. Always 1. Could relate to presets, power, or seated (not in app but avaible in scenes?)
+    // | Cleaning Mode                     | 31-40         | 10        | self_clean, rear, female, dry, auto_wash. Presets not in app: powerful_wash, child, lady_care, rear_massage, female_massage
+    // | Spray Water Temp                  | 41-48         | 2         | Four levels. Level 1 is room temp (no heating). L2 = Target temp 33°C (per manual), L3 = 36°C, L4 = 39°C
+    // | Light                             | 49-50         | 2         | Bowl LED On or Off
+    // | UNKNOWN_BITS_51_AND_52            | 51-52         | 2         | Unknown. Always 0.
+    // | Cleaning Position                 | 53-56         | 4         | 4 postions of cleaning wand extention. Works for Rear. Can't recall if tested for female.
+    // | Seat Temp                         | 57-64         | 8         | Four levels. Level 1 is room temp (no heating). L2 = Target temp 33°C (per manual), L3 = 36°C, L4 = 39°C
+    // | UNKNOWN_BITS_65_TO_68             | 65-68         | 4         | Unknown. Always 0
+    // | Cleaning Pressure or Drying temp  | 69-72         | 4         | If in drying mode then changes air temp, if in cleaning mode then changes water pressure
+    // |                                   |               |           |
+    // |                                   |               |           |
 
     // Idle Mode
     const std::array<uint8_t, 2> IDLE_MODE_BITS_25_AND_26_ON = {0x14, 0x40};
@@ -80,6 +83,15 @@ namespace esphome
     const std::array<uint8_t, 8> SEAT_TEMP_BITS_57_TO_64_LEVEL_2 = {0x14, 0x16, 0x14, 0x40, 0x14, 0x16, 0x14, 0x16};
     const std::array<uint8_t, 8> SEAT_TEMP_BITS_57_TO_64_LEVEL_3 = {0x14, 0x16, 0x14, 0x40, 0x14, 0x40, 0x14, 0x40};
     const std::array<uint8_t, 8> SEAT_TEMP_BITS_57_TO_64_LEVEL_4 = {0x14, 0x40, 0x14, 0x16, 0x14, 0x40, 0x14, 0x16};
+
+    // UNKNOWN_BITS_27_AND_28
+    const std::array<uint8_t, 4> UNKNOWN_BITS_65_TO_68 = {0x14, 0x16, 0x14, 0x16};
+
+    // Cleaning Pressure or Drying Temp
+    const std::array<uint8_t, 8> CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72_LEVEL_1 = {0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x16};
+    const std::array<uint8_t, 8> CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72_LEVEL_2 = {0x14, 0x16, 0x14, 0x40, 0x14, 0x16, 0x14, 0x16};
+    const std::array<uint8_t, 8> CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72_LEVEL_3 = {0x14, 0x40, 0x14, 0x16, 0x14, 0x16, 0x14, 0x16};
+    const std::array<uint8_t, 8> CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72_LEVEL_4 = {0x14, 0x40, 0x14, 0x40, 0x14, 0x40, 0x14, 0x40};
 
     // // State Frame size
     // const uint8_t DAIKIN_STATE_FRAME_SIZE = 19;
