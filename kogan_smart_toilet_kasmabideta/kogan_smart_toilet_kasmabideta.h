@@ -30,7 +30,7 @@ namespace esphome
     const std::array<uint8_t, 2> LEAD_OUT_BURST_PAIRS_BITS_105_AND_106 = {0x14, 0x81};
 
     // Command Structure
-    // | Short_Name                        | Bit Positions | Bit Count | Description
+    // | Command Short Name                | Bit Positions | Bit Count | Description
     // | ----------------------------------| --------------| --------- | ----------------------------------------------
     // | Idle Mode                         | 25-26         | 2         | ON if rear, front, dry NOT enabled (after stop button). Required to start some of the presets (Child, Super, etc)
     // | UNKNOWN_BITS_27_AND_28            | 27-28         | 2         | Unknown. Always 1. Could relate to presets, power, or seated (not in app but avaible in scenes?)
@@ -42,8 +42,11 @@ namespace esphome
     // | Seat Temp                         | 57-64         | 8         | Four levels. Level 1 is room temp (no heating). L2 = Target temp 33°C (per manual), L3 = 36°C, L4 = 39°C
     // | UNKNOWN_BITS_65_TO_68             | 65-68         | 4         | Unknown. Always 0
     // | Cleaning Pressure or Drying temp  | 69-72         | 4         | If in drying mode then changes air temp, if in cleaning mode then changes water pressure
-    // |                                   |               |           |
-    // |                                   |               |           |
+    // | UNKNOWN_BITS_73_TO_76             | 73-76         | 6         | Unknown. Always 0
+    // | ECO Mode                          | 77-78         | 2         | Turn on/off power saving routines
+    // | UNKNOWN_BITS_79_TO_84             | 79-84         | 6         | Unknown. Always 0
+    // | Deodorize                         | 85-86         | 2         | Turn on/off deoderiser
+    // | UNKNOWN_BITS_87_AND_88            | 87-88         | 2         | Unknown. Always 0
 
     // Idle Mode
     const std::array<uint8_t, 2> IDLE_MODE_BITS_25_AND_26_ON = {0x14, 0x40};
@@ -92,6 +95,23 @@ namespace esphome
     const std::array<uint8_t, 8> CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72_LEVEL_2 = {0x14, 0x16, 0x14, 0x40, 0x14, 0x16, 0x14, 0x16};
     const std::array<uint8_t, 8> CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72_LEVEL_3 = {0x14, 0x40, 0x14, 0x16, 0x14, 0x16, 0x14, 0x16};
     const std::array<uint8_t, 8> CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72_LEVEL_4 = {0x14, 0x40, 0x14, 0x40, 0x14, 0x40, 0x14, 0x40};
+
+    // UNKNOWN_BITS_73_TO_76
+    const std::array<uint8_t, 4> UNKNOWN_BITS_73_TO_76 = {0x14, 0x16, 0x14, 0x16};
+
+    // Eco Mode (Energy saving)
+    const std::array<uint8_t, 2> IDLE_MODE_BITS_77_AND_78_ON = {0x14, 0x40};
+    const std::array<uint8_t, 2> IDLE_MODE_BITS_77_AND_78_OFF = {0x14, 0x16};
+
+    // UNKNOWN_BITS_79_TO_84
+    const std::array<uint8_t, 6> UNKNOWN_BITS_79_TO_84 = {0x14, 0x16, 0x14, 0x16, 0x14, 0x16};
+
+    // Deodorise
+    const std::array<uint8_t, 2> DEODORISE_MODE_BITS_85_AND_86_ON = {0x14, 0x40};
+    const std::array<uint8_t, 2> DEODORISE_MODE_BITS_85_AND_86_OFF = {0x14, 0x16};
+
+    // UNKNOWN_BITS_87_AND_88
+    const std::array<uint8_t, 2> UNKNOWN_BITS_65_TO_68 = {0x14, 0x16};
 
     // // State Frame size
     // const uint8_t DAIKIN_STATE_FRAME_SIZE = 19;
