@@ -6,7 +6,7 @@
 
 namespace esphome
 {
-  namespace kogan_smart_toilet
+  namespace kogan_bidet
   {
     // Function               | Bits    | Count | Constant | In Checksum | Comment
     // -----------------------|---------|-------|----------|-------------|----------------------------------------------------
@@ -137,5 +137,5 @@ namespace esphome
     //   bool parse_state_frame_(const uint8_t frame[]);
     // };
 
-  } // namespace kogan_smart_toilet
+  } // namespace kogan_bidet
 } // namespace esphome
