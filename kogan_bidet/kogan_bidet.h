@@ -1,12 +1,12 @@
-// #pragma once
+ #pragma once
 
-// #include "esphome/components/climate_ir/climate_ir.h"
+#include "esphome/components/climate_ir/climate_ir.h"
 #include <array>
 #include <cstdint>
 
 namespace esphome
 {
-  namespace kogan_bidet
+  namespace kogan_smart_toilet
   {
     // Function               | Bits    | Count | Constant | In Checksum | Comment
     // -----------------------|---------|-------|----------|-------------|----------------------------------------------------
@@ -69,8 +69,8 @@ namespace esphome
     const std::array<uint8_t, 8> WATER_TEMP_BITS_41_TO_48_LEVEL_4 = {0x14, 0x40, 0x14, 0x16, 0x14, 0x40, 0x14, 0x16};
 
     // LED
-    const std::array<uint8_t, 2> LIGHT_49_AND_50_ON = {0x14, 0x40};
-    const std::array<uint8_t, 2> LIGHT_49_AND_50_OFF = {0x14, 0x16};
+    const std::array<uint8_t, 2> LIGHT_BITS_49_AND_50_ON = {0x14, 0x40};
+    const std::array<uint8_t, 2> LIGHT_BITS_49_AND_50_OFF = {0x14, 0x16};
 
     // UNKNOWN_BITS_51_AND_52
     const std::array<uint8_t, 2> UNKNOWN_BITS_51_AND_52 = {0x14, 0x16};
@@ -100,8 +100,8 @@ namespace esphome
     const std::array<uint8_t, 4> UNKNOWN_BITS_73_TO_76 = {0x14, 0x16, 0x14, 0x16};
 
     // Eco Mode (Energy saving)
-    const std::array<uint8_t, 2> IDLE_MODE_BITS_77_AND_78_ON = {0x14, 0x40};
-    const std::array<uint8_t, 2> IDLE_MODE_BITS_77_AND_78_OFF = {0x14, 0x16};
+    const std::array<uint8_t, 2> ECO_MODE_BITS_77_AND_78_ON = {0x14, 0x40};
+    const std::array<uint8_t, 2> ECO_MODE_BITS_77_AND_78_OFF = {0x14, 0x16};
 
     // UNKNOWN_BITS_79_TO_84
     const std::array<uint8_t, 6> UNKNOWN_BITS_79_TO_84 = {0x14, 0x16, 0x14, 0x16, 0x14, 0x16};
@@ -113,29 +113,20 @@ namespace esphome
     // UNKNOWN_BITS_87_AND_88
     const std::array<uint8_t, 2> UNKNOWN_BITS_87_AND_88 = {0x14, 0x16};
 
-    // // State Frame size
-    // const uint8_t DAIKIN_STATE_FRAME_SIZE = 19;
 
-    // class DaikinClimate : public climate_ir::ClimateIR
-    // {
-    // public:
-    //   DaikinClimate()
-    //       : climate_ir::ClimateIR(DAIKIN_TEMP_MIN, DAIKIN_TEMP_MAX, 1.0f, true, true,
-    //                               {climate::CLIMATE_FAN_AUTO, climate::CLIMATE_FAN_LOW, climate::CLIMATE_FAN_MEDIUM,
-    //                                 climate::CLIMATE_FAN_HIGH},
-    //                               {climate::CLIMATE_SWING_OFF, climate::CLIMATE_SWING_VERTICAL,
-    //                                 climate::CLIMATE_SWING_HORIZONTAL, climate::CLIMATE_SWING_BOTH}) {}
+    class KoganBidet : public climate_ir::ClimateIR {
+      public:
+      KoganBidet()
+          : climate_ir::ClimateIR(YKR_K_002E_TEMP_MIN, YKR_K_002E_TEMP_MAX, 1.0f, true, true,
+                                  {climate::CLIMATE_FAN_AUTO, climate::CLIMATE_FAN_LOW, climate::CLIMATE_FAN_MEDIUM,
+                                    climate::CLIMATE_FAN_HIGH},
+                                  {climate::CLIMATE_SWING_OFF, climate::CLIMATE_SWING_VERTICAL,
+                                    climate::CLIMATE_SWING_HORIZONTAL, climate::CLIMATE_SWING_BOTH}) {}
 
-    // protected:
-    //   // Transmit via IR the state of this climate controller.
-    //   void transmit_state() override;
-    //   uint8_t operation_mode_();
-    //   uint16_t fan_speed_();
-    //   uint8_t temperature_();
-    //   // Handle received IR Buffer
-    //   bool on_receive(remote_base::RemoteReceiveData data) override;
-    //   bool parse_state_frame_(const uint8_t frame[]);
-    // };
+      protected:
+      void transmit_state() override;
+      bool on_receive(remote_base::RemoteReceiveData data) override;
+    };
 
-  } // namespace kogan_bidet
+  } // namespace kogan_smart_toilet
 } // namespace esphome
