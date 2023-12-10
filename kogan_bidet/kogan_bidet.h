@@ -1,6 +1,5 @@
- #pragma once
+#pragma once
 
-#include "esphome/components/climate_ir/climate_ir.h"
 #include <array>
 #include <cstdint>
 
@@ -17,21 +16,6 @@ namespace esphome
     // Checksum               | 89-104  |   16  | No       | No          | Sum of command bits, then modulo 256
     // Lead out burst pairs   | 105-106 |    2  | Yes      | No          | Assumed function
 
-    // Pronto Preamble
-    const std::array<uint8_t, 8> PREAMBLE_BITS_1_TO_4 = {0x00, 0x6D, 0x33, 0x00}; // Raw data, Carrier frequency (38031.13 Hz), 51 Burst Pairs in Sequence #1, No Sequence #2 (Repeat).
-
-    // Lead-in Burst Pairs
-    const std::array<uint8_t, 8> LEAD_IN_BURST_PAIRS_BITS_5_TO_8 = {0x74, 0x75, 0x74, 0xAA};
-
-    // Address
-    const std::array<uint8_t, 16> ADDRESS_BITS_9_TO_24 = {0x14, 0x40, 0x14, 0x16, 0x14, 0x40, 0x14, 0x16, 0x14, 0x16, 0x14, 0x40, 0x14, 0x40, 0x14, 0x40};
-
-    // Lead out burst pair
-    const std::array<uint8_t, 2> LEAD_OUT_BURST_PAIRS_BITS_105_AND_106 = {0x14, 0x81};
-
-    // Command Structure
-    // | Command Short Name                | Bit Positions | Bit Count | Description
-    // | ----------------------------------| --------------| --------- | ----------------------------------------------
     // | Idle Mode                         | 25-26         | 2         | ON if rear, front, dry NOT enabled (after stop button). Required to start some of the presets (Child, Super, etc)
     // | UNKNOWN_BITS_27_TO_30             | 27-30         | 4         | Unknown. Always 1. Could relate to presets, power, or seated (not in app but avaible in scenes?)
     // | Cleaning Mode                     | 31-40         | 10        | self_clean, rear, female, dry, auto_wash. Presets not in app: powerful_wash, child, lady_care, rear_massage, female_massage
@@ -48,12 +32,24 @@ namespace esphome
     // | Deodorize                         | 85-86         | 2         | Turn on/off deoderiser
     // | UNKNOWN_BITS_87_AND_88            | 87-88         | 2         | Unknown. Always 0
 
+    // Pronto Preamble
+    const std::array<uint8_t, 8> PREAMBLE_BITS_1_TO_4 = {0x00, 0x6D, 0x33, 0x00}; // Raw data, Carrier frequency (38031.13 Hz), 51 Burst Pairs in Sequence #1, No Sequence #2 (Repeat).
+
+    // Lead-in Burst Pairs
+    const std::array<uint8_t, 8> LEAD_IN_BURST_PAIRS_BITS_5_TO_8 = {0x74, 0x75, 0x74, 0xAA};
+
+    // Address
+    const std::array<uint8_t, 16> ADDRESS_BITS_9_TO_24 = {0x14, 0x40, 0x14, 0x16, 0x14, 0x40, 0x14, 0x16, 0x14, 0x16, 0x14, 0x40, 0x14, 0x40, 0x14, 0x40};
+
+    // Lead out burst pair
+    const std::array<uint8_t, 2> LEAD_OUT_BURST_PAIRS_BITS_105_AND_106 = {0x14, 0x81};
+
     // Idle Mode
     const std::array<uint8_t, 2> IDLE_MODE_BITS_25_AND_26_ON = {0x14, 0x40};
     const std::array<uint8_t, 2> IDLE_MODE_BITS_25_AND_26_OFF = {0x14, 0x16};
 
     // UNKNOWN_BITS_27_TO_30
-    const std::array<uint8_t, 4> UNKNOWN_BITS_27_AND_28 = {0x14, 0x40, 0x14, 0x16};
+    const std::array<uint8_t, 4> UNKNOWN_BITS_27_TO_30 = {0x14, 0x40, 0x14, 0x16};
 
     // Cleaning Mode
     const std::array<uint8_t, 10> CLEANING_MODE_BITS_31_TO_40_REAR = {0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x40, 0x14, 0x16};
@@ -113,17 +109,17 @@ namespace esphome
     // UNKNOWN_BITS_87_AND_88
     const std::array<uint8_t, 2> UNKNOWN_BITS_87_AND_88 = {0x14, 0x16};
 
-
-    class KoganBidet : public climate_ir::ClimateIR {
-      public:
+    class KoganBidet : public climate_ir::ClimateIR
+    {
+    public:
       KoganBidet()
           : climate_ir::ClimateIR(YKR_K_002E_TEMP_MIN, YKR_K_002E_TEMP_MAX, 1.0f, true, true,
                                   {climate::CLIMATE_FAN_AUTO, climate::CLIMATE_FAN_LOW, climate::CLIMATE_FAN_MEDIUM,
-                                    climate::CLIMATE_FAN_HIGH},
+                                   climate::CLIMATE_FAN_HIGH},
                                   {climate::CLIMATE_SWING_OFF, climate::CLIMATE_SWING_VERTICAL,
-                                    climate::CLIMATE_SWING_HORIZONTAL, climate::CLIMATE_SWING_BOTH}) {}
+                                   climate::CLIMATE_SWING_HORIZONTAL, climate::CLIMATE_SWING_BOTH}) {}
 
-      protected:
+    protected:
       void transmit_state() override;
       bool on_receive(remote_base::RemoteReceiveData data) override;
     };

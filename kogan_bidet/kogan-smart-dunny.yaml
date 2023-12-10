@@ -1,0 +1,568 @@
+
+  #Product Name:      KOGAN SMARTERHOME™ SMART ANTIBACTERIAL WASH & DRY ELECTRIC BIDET TOILET SEAT
+  #Product Code:      KASMABIDETA
+  #Product Listing:   https://www.kogan.com/au/buy/kogan-smarterhome-smart-antibacterial-wash-dry-electric-bidet-toilet-seat/
+  #Product Manual:    https://assets.kogan.com/files/usermanuals/KASMABIDETA_UG_v2.pdf
+
+# Kogan Smart Bidet Pronto Protocol
+#  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# | Function                          | Code Name                             | Bits    | Count | Constant | Checksum | Comment
+# |-----------------------------------|---------------------------------------|---------|-------|----------|----------|----------------------------------------------------------------------------------------------------------
+# | Pronto Preamble                   | PREAMBLE_BITS_1_TO_4                  | 01-04   | 4     | Yes      | No       | Raw data, Carrier frequency (38031.13 Hz), 51 Burst Pairs in Sequence #1, No Sequence #2 (Repeat).
+# | Lead in burst pairs               | LEAD_IN_BURST_PAIRS_BITS_5_TO_8       | 05-08   | 4     | Yes      | No       | Assumed function
+# | Address                           | ADDRESS_BITS_9_TO_24                  | 09-24   | 16    | Yes      | Yes      | Appears to be constant
+# | Idle Mode                         | IDLE_MODE_BITS_25_AND_26              | 25-26   | 2     | No       | Yes      | ON if rear, front, dry NOT enabled (after stop button). Required to start some of the presets (Child, Super, etc)
+# | UNKNOWN_BITS_27_TO_30             | UNKNOWN_BITS_27_TO_30                 | 27-30   | 4     | Yes      | Yes      | Unknown. Always 0.
+# | Cleaning Mode                     | CLEANING_MODE_BITS_31_TO_40           | 31-40   | 10    | No       | Yes      | self_clean, rear, female, dry, auto_wash. Presets not in app: powerful_wash, child, lady_care, rear_massage, female_massage
+# | Spray Water Temp                  | WATER_TEMP_BITS_41_TO_48              | 41-48   | 2     | No       | Yes      | Four levels. Level 1 is room temp (no heating). L2 = Target temp 33°C (per manual), L3 = 36°C, L4 = 39°C
+# | Light                             | LIGHT_49_AND_50                       | 49-50   | 2     | No       | Yes      | Bowl LED On or Off
+# | UNKNOWN_BITS_51_AND_52            | UNKNOWN_BITS_51_AND_52                | 51-52   | 2     | No       | Yes      | Unknown. Always 0.
+# | Cleaning Position                 | CLEANING_POSITION_BITS_53_TO_56       | 53-56   | 4     | No       | Yes      | 4 positions of cleaning wand extension. Works for Rear. Can't recall if tested for female.
+# | Seat Temp                         | SEAT_TEMP_BITS_57_TO_64               | 57-64   | 8     | No       | Yes      | Four levels. Level 1 is room temp (no heating). L2 = Target temp 33°C (per manual), L3 = 36°C, L4 = 39°C
+# | UNKNOWN_BITS_65_TO_68             | UNKNOWN_BITS_65_TO_68                 | 65-68   | 4     | No       | Yes      | Unknown. Always 0
+# | Cleaning Pressure or Drying temp  | CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72 | 69-72   | 4     | No       | Yes      | If in drying mode then changes air temp, if in cleaning mode then changes water pressure
+# | UNKNOWN_BITS_73_TO_76             | UNKNOWN_BITS_73_TO_76                 | 73-76   | 6     | No       | Yes      | Unknown. Always 0
+# | ECO Mode                          | ECO_MODE_BITS_77_AND_78               | 77-78   | 2     | No       | Yes      | Turn on/off power saving routines
+# | UNKNOWN_BITS_79_TO_84             | UNKNOWN_BITS_79_TO_84                 | 79-84   | 6     | No       | Yes      | Unknown. Always 0
+# | Deodorize                         | DEODORIZE_MODE_BITS_85_AND_86         | 85-86   | 2     | No       | Yes      | Turn on/off deodorizer
+# | UNKNOWN_BITS_87_AND_88            | UNKNOWN_BITS_87_AND_88                | 87-88   | 2     | No       | Yes      | Unknown. Always 0
+# | Checksum (calculated)             | CHECKSUM_BITS_89_TO_104               | 89-104  | 16    | No       | No       | Sum of command bits, then modulo 256
+# | Lead out burst pairs              | LEAD_OUT_BURST_PAIRS_BITS_105_AND_106 | 105-106 | 2     | Yes      | No       | Assumed function
+#                                                                             |TOTAL    | 106
+
+esphome:
+  name: kogan-smart-dunny
+  friendly_name: Kogan Smart Dunny
+  comment: Smart Dunny Lolin S2 Mini
+
+esp32:
+  board: lolin_s2_mini #Pinout: https://www.wemos.cc/en/latest/s2/s2_mini.html
+  framework:
+    type: esp-idf
+    version: recommended
+
+wifi:
+  networks:
+  - ssid: !secret wifi_ssid
+    password: !secret wifi_password
+  manual_ip:
+    static_ip: 192.168.1.128
+    gateway: 192.168.1.1
+    subnet: 255.255.255.0
+api:
+  services:
+    - service: send_pronto
+      variables:
+        data: string
+      then:
+      - remote_transmitter.transmit_pronto:
+          data: !lambda 'return data;'
+ota:
+
+logger:
+  tx_buffer_size: 1024 #Log large Pronto Codes
+
+remote_transmitter:
+  pin:
+    number: 16
+  carrier_duty_percent: 50% #May need to tweak
+
+# text_sensor:
+#   - platform: template
+#     id: FULL_PRONTO_CODE_GLOBAL
+#     name: "Pronto Code Str"
+#     update_interval: never
+
+button:
+  - platform: template
+    name: Generate Pronto Code
+    id: gen_pronto_code_button
+    internal: false
+    on_press:
+      - script.execute: generate_pronto_code_script
+
+  - platform: template
+    name: All Off #Turn off all settings
+    id: all_off_button
+    internal: false
+    on_press:
+      - remote_transmitter.transmit_pronto:
+            data: '
+                   0000 006D 0033 0000 0074 0075 0074 00AA
+                   0014 0040 0014 0016 0014 0040 0014 0016
+                   0014 0016 0014 0040 0014 0040 0014 0040
+                   0014 0040 0014 0040 0014 0016 0014 0016
+                   0014 0016 0014 0016 0014 0016 0014 0016
+                   0014 0016 0014 0016 0014 0016 0014 0016
+                   0014 0016 0014 0016 0014 0016 0014 0016
+                   0014 0016 0014 0016 0014 0016 0014 0016
+                   0014 0016 0014 0016 0014 0016 0014 0016
+                   0014 0016 0014 0016 0014 0016 0014 0016
+                   0014 0016 0014 0016 0014 0016 0014 0016
+                   0014 0016 0014 0040 0014 0040 0014 0016
+                   0014 0016 0014 0040 0014 0040 0014 0040
+                   0014 0181
+                  '
+
+  - platform: template
+    name: Send Pronto Command
+    id: send_pronto_command
+    internal: false
+    on_press:
+      - remote_transmitter.transmit_pronto:
+            data: !lambda return id(FULL_PRONTO_CODE_GLOBAL).c_str();
+      - lambda:  |-
+          ESP_LOGD("Custom", "Sent Pronto: code=[%s]", id(FULL_PRONTO_CODE_GLOBAL).c_str());
+
+
+# Idle Status: On if no cleaning mode is on.
+binary_sensor:
+  - platform: template
+    name: "Idle Mode"
+    id: IDLE_MODE_BINARY_SENSOR
+    lambda: |-
+        if (id(CLEANING_MODE_SELECT).state == "Off") {
+          return true;
+        } else {
+          return false;
+        }
+    on_state:
+      then:
+        - script.execute: generate_pronto_code_script
+
+switch:
+  - platform: template
+    name: "LED"
+    id: LIGHT_SWITCH
+    optimistic: true
+    on_turn_on:
+      then:
+        - script.execute: generate_pronto_code_script
+    on_turn_off:
+      then:
+        - script.execute: generate_pronto_code_script
+
+  - platform: template
+    name: "Eco Mode"
+    id: ECO_MODE_SWITCH
+    optimistic: true
+    on_turn_on:
+      then:
+        - script.execute: generate_pronto_code_script
+    on_turn_off:
+      then:
+        - script.execute: generate_pronto_code_script
+
+  - platform: template
+    name: "Deodoriser"
+    id: DEODORISE_MODE_SWITCH
+    optimistic: true
+    on_turn_on:
+      then:
+        - script.execute: generate_pronto_code_script
+    on_turn_off:
+      then:
+        - script.execute: generate_pronto_code_script
+
+select:
+  - platform: template
+    name: "Water Temp"
+    id: WATER_TEMP_SELECT
+    optimistic: true
+    options:
+      - "Off"
+      - "Low"
+      - "Medium"
+      - "High"
+    initial_option: "Off"
+    on_value:
+      then:
+        - script.execute: generate_pronto_code_script
+
+  - platform: template
+    name: "Cleaning Mode"
+    id: CLEANING_MODE_SELECT
+    optimistic: true
+    options:
+      - "Off"
+      - "Rear"
+      - "Dry"
+      - "Female"
+      - "Auto"
+      - "Self Clean"
+    initial_option: "Off"
+    on_value:
+      then:
+        - script.execute: generate_pronto_code_script
+
+  - platform: template
+    name: "Cleaning Position"
+    id: CLEANING_POSITION_SELECT
+    optimistic: true
+    options:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+    initial_option: "1"
+    on_value:
+      then:
+        - script.execute: generate_pronto_code_script
+
+  - platform: template
+    name: "Seat Temperature"
+    id: SEAT_TEMP_SELECT
+    optimistic: true
+    options:
+      - "Off"     #Room Temp
+      - "Low"     #33°C
+      - "Medium"  #36°C
+      - "High"    #39°C
+    initial_option: "Off"
+    on_value:
+      then:
+        - script.execute: generate_pronto_code_script
+
+  - platform: template
+    name: "Clean Press or Dry Temp"
+    id: CLEAN_PRESS_OR_DRY_TEMP_SELECT
+    optimistic: true
+    options:
+      - "Off"
+      - "Low"
+      - "Medium"
+      - "High"
+    initial_option: "Off"
+    on_value:
+      then:
+        - script.execute: generate_pronto_code_script
+
+globals:
+  - id: FULL_PRONTO_CODE_GLOBAL
+    type: std::string
+    restore_value: no
+    #Intial Value, everthing off.
+    initial_value: '"0000 006D 0033 0000 0074 0075 0074 00AA 0014 0040 0014 0016 0014 0040 0014 0016 0014 0016 0014 0040 0014 0040 0014 0040 0014 0040 0014 0040 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0016 0014 0040 0014 0040 0014 0016 0014 0016 0014 0040 0014 0040 0014 0040 0014 0181"'
+
+  - id: PREAMBLE_BITS_1_TO_4
+    type: std::array<uint8_t, 4>
+    initial_value: '{0x00, 0x6D, 0x33, 0x00}' #Raw data, Carrier frequency (38kHz), 51 Burst Pairs in Sequence #1, No Sequence #2 (Repeat).
+
+  - id: LEAD_IN_BURST_PAIRS_BITS_5_TO_8
+    type: std::array<uint8_t, 4>
+    initial_value: '{0x74, 0x75, 0x74, 0xAA}'
+
+  - id: ADDRESS_BITS_9_TO_24
+    type: std::array<uint8_t, 16>
+    initial_value: '{
+      0x14, 0x40, 0x14, 0x16,
+      0x14, 0x40, 0x14, 0x16,
+      0x14, 0x16, 0x14, 0x40,
+      0x14, 0x40, 0x14, 0x40
+    }'
+
+  - id: UNKNOWN_BITS_27_TO_30
+    type: std::array<uint8_t, 4>
+    initial_value: '{0x14, 0x40, 0x14, 0x16}'
+
+  - id: UNKNOWN_BITS_51_AND_52
+    type: std::array<uint8_t, 2>
+    initial_value: '{0x14, 0x16}'
+
+  - id: UNKNOWN_BITS_65_TO_68
+    type: std::array<uint8_t, 4>
+    initial_value: '{0x14, 0x16, 0x14, 0x16}'
+
+  - id: UNKNOWN_BITS_73_TO_76
+    type: std::array<uint8_t, 4>
+    initial_value: '{0x14, 0x16, 0x14, 0x16}'
+
+  - id: UNKNOWN_BITS_79_TO_84
+    type: std::array<uint8_t, 6>
+    initial_value: '{0x14, 0x16, 0x14, 0x16, 0x14, 0x16}'
+
+  - id: UNKNOWN_BITS_87_AND_88
+    type: std::array<uint8_t, 2>
+    initial_value: '{0x14, 0x16}'
+
+  - id: IDLE_MODE_BITS_25_AND_26_OPTION_MAPPINGS
+    type: std::map<std::string, std::array<uint8_t, 2>>
+    initial_value: '{
+      {"On",  {0x14, 0x40}},
+      {"Off", {0x14, 0x16}}
+    }'
+
+  - id: CLEANING_MODE_BITS_31_TO_40_OPTION_MAPPINGS
+    type: std::map<std::string, std::array<uint8_t, 10>>
+    initial_value: '{
+      {"Off",         {0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x16}  },
+      {"Rear",        {0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x40, 0x14, 0x16}  },
+      {"Dry",         {0x14, 0x16, 0x14, 0x40, 0x14, 0x16, 0x14, 0x16, 0x14, 0x16}  },
+      {"Female",      {0x14, 0x16, 0x14, 0x16, 0x14, 0x40, 0x14, 0x16, 0x14, 0x40}  },
+      {"Auto",        {0x14, 0x40, 0x14, 0x16, 0x14, 0x16, 0x14, 0x40, 0x14, 0x16}  },
+      {"Self Clean",  {0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x40}  }
+    }'
+
+  - id: WATER_TEMP_BITS_41_TO_48_OPTION_MAPPINGS
+    type: std::map<std::string, std::array<uint8_t, 8>>
+    initial_value: '{
+      {"Off",     {0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x16}  },
+      {"Low",     {0x14, 0x16, 0x14, 0x40, 0x14, 0x16, 0x14, 0x16}  },
+      {"Medium",  {0x14, 0x16, 0x14, 0x40, 0x14, 0x40, 0x14, 0x40}  },
+      {"High",    {0x14, 0x40, 0x14, 0x16, 0x14, 0x40, 0x14, 0x16}  }
+    }'
+
+  - id: LIGHT_49_AND_50_OPTION_MAPPINGS
+    type: std::map<std::string, std::array<uint8_t, 2>>
+    initial_value: '{
+      {"On",  {0x14, 0x40}},
+      {"Off", {0x14, 0x16}}
+    }'
+
+  - id: CLEANING_POSITION_BITS_53_TO_56_OPTION_MAPPINGS
+    type: std::map<std::string, std::array<uint8_t, 4>>
+    initial_value: '{
+      {"1", {0x14, 0x16, 0x14, 0x16}  },
+      {"2", {0x14, 0x16, 0x14, 0x40}  },
+      {"3", {0x14, 0x40, 0x14, 0x16}  },
+      {"4", {0x14, 0x40, 0x14, 0x40}  }
+    }'
+
+  - id: SEAT_TEMP_BITS_57_TO_64_OPTION_MAPPINGS
+    type: std::map<std::string, std::array<uint8_t, 8>>
+    initial_value: '{
+      {"Off",     {0x14, 0x16, 0x14, 0x16, 0x14, 0x16, 0x14, 0x16}  },
+      {"Low",     {0x14, 0x16, 0x14, 0x40, 0x14, 0x16, 0x14, 0x16}  },
+      {"Medium",  {0x14, 0x16, 0x14, 0x40, 0x14, 0x40, 0x14, 0x40}  },
+      {"High",    {0x14, 0x40, 0x14, 0x16, 0x14, 0x40, 0x14, 0x16}  }
+    }'
+
+  - id: CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72_OPTION_MAPPINGS
+    type: std::map<std::string, std::array<uint8_t, 4>>
+    initial_value: '{
+      {"Off",     {0x14, 0x16, 0x14, 0x16}  },
+      {"Low",     {0x14, 0x16, 0x14, 0x40}  },
+      {"Medium",  {0x14, 0x40, 0x14, 0x16}  },
+      {"High",    {0x14, 0x40, 0x14, 0x40}  }
+    }'
+
+  - id: ECO_MODE_BITS_77_AND_78_OPTION_MAPPINGS
+    type: std::map<std::string, std::array<uint8_t, 2>>
+    initial_value: '{
+      {"On",  {0x14, 0x40}  },
+      {"Off", {0x14, 0x16}  }
+    }'
+
+  - id: DEODORIZE_MODE_BITS_85_AND_86_OPTION_MAPPINGS
+    type: std::map<std::string, std::array<uint8_t, 2>>
+    initial_value: '{
+      {"On",  {0x14, 0x40}  },
+      {"Off", {0x14, 0x16}  }
+    }'
+
+  - id: CHECKSUM_BITS_89_TO_104
+    type: std::array<uint8_t, 16>
+    restore_value: no
+    initial_value: '{
+      0x14, 0x16, 0x14, 0x40,
+      0x14, 0x40, 0x14, 0x16,
+      0x14, 0x16, 0x14, 0x40,
+      0x14, 0x40, 0x14, 0x40
+    }'
+
+  - id: LEAD_OUT_BURST_PAIRS_BITS_105_AND_106 #unint16
+    type: std::array<uint16_t, 2>
+    initial_value: '{0x0014, 0x0181}'
+
+
+
+script:
+  - id: generate_pronto_code_script
+    then:
+      - lambda: |-
+          // Get current values of user inputs
+          std::string CLEANING_MODE_CURRENT_STATE = id(CLEANING_MODE_SELECT).state.c_str();
+          std::string WATER_TEMP_CURRENT_STATE = id(WATER_TEMP_SELECT).state.c_str();
+          std::string CLEANING_POSITION_CURRENT_STATE = id(CLEANING_POSITION_SELECT).state.c_str();
+          std::string SEAT_TEMP_CURRENT_STATE = id(SEAT_TEMP_SELECT).state.c_str();
+          std::string CLEAN_PRESS_OR_DRY_TEMP_CURRENT_STATE = id(CLEAN_PRESS_OR_DRY_TEMP_SELECT).state.c_str();
+          std::string LED_SWITCH_CURRENT_STATE = id(LIGHT_SWITCH).state ? "On" : "Off";
+          std::string ECO_MODE_SWITCH_CURRENT_STATE = id(ECO_MODE_SWITCH).state ? "On" : "Off";
+          std::string DEODORISE_MODE_SWITCH_CURRENT_STATE = id(DEODORISE_MODE_SWITCH).state ? "On" : "Off";
+          std::string IDLE_MODE_BINARY_SENSOR_CURRENT_STATE = id(IDLE_MODE_BINARY_SENSOR).state ? "On" : "Off";
+
+          // Get the corresponding arrays from Bit mappings
+          std::array<uint8_t, 2>  IDLE_MODE_BITS_25_AND_26 = id(IDLE_MODE_BITS_25_AND_26_OPTION_MAPPINGS)[IDLE_MODE_BINARY_SENSOR_CURRENT_STATE];
+          std::array<uint8_t, 10> CLEANING_MODE_BITS_31_TO_40 = id(CLEANING_MODE_BITS_31_TO_40_OPTION_MAPPINGS)[CLEANING_MODE_CURRENT_STATE];
+          std::array<uint8_t, 8>  WATER_TEMP_BITS_41_TO_48 = id(WATER_TEMP_BITS_41_TO_48_OPTION_MAPPINGS)[WATER_TEMP_CURRENT_STATE];
+          std::array<uint8_t, 2>  LIGHT_49_AND_50 = id(LIGHT_49_AND_50_OPTION_MAPPINGS)[LED_SWITCH_CURRENT_STATE];
+          std::array<uint8_t, 4>  CLEANING_POSITION_BITS_53_TO_56 = id(CLEANING_POSITION_BITS_53_TO_56_OPTION_MAPPINGS)[CLEANING_POSITION_CURRENT_STATE];
+          std::array<uint8_t, 8>  SEAT_TEMP_BITS_57_TO_64 = id(SEAT_TEMP_BITS_57_TO_64_OPTION_MAPPINGS)[SEAT_TEMP_CURRENT_STATE];
+          std::array<uint8_t, 4>  CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72 = id(CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72_OPTION_MAPPINGS)[CLEAN_PRESS_OR_DRY_TEMP_CURRENT_STATE];
+          std::array<uint8_t, 2>  ECO_MODE_BITS_77_AND_78 = id(ECO_MODE_BITS_77_AND_78_OPTION_MAPPINGS)[ECO_MODE_SWITCH_CURRENT_STATE];
+          std::array<uint8_t, 2>  DEODORIZE_MODE_BITS_85_AND_86 = id(DEODORIZE_MODE_BITS_85_AND_86_OPTION_MAPPINGS)[DEODORISE_MODE_SWITCH_CURRENT_STATE];
+
+          // Concatenated them into a larger array which holds all values required for the checksum
+          std::array<uint8_t, 80> checksumBitsArray; // 80 required
+          auto it = checksumBitsArray.begin();
+                                                                                                                      // Total 80 bits;
+          it = std::copy(id(ADDRESS_BITS_9_TO_24).begin(), id(ADDRESS_BITS_9_TO_24).end(), it);                             // 16 bits
+          it = std::copy(IDLE_MODE_BITS_25_AND_26.begin(), IDLE_MODE_BITS_25_AND_26.end(), it);                             // 2  bits
+          it = std::copy(id(UNKNOWN_BITS_27_TO_30).begin(), id(UNKNOWN_BITS_27_TO_30).end(), it);                           // 4  bits
+          it = std::copy(CLEANING_MODE_BITS_31_TO_40.begin(), CLEANING_MODE_BITS_31_TO_40.end(), it);                       // 10 bits
+          it = std::copy(WATER_TEMP_BITS_41_TO_48.begin(), WATER_TEMP_BITS_41_TO_48.end(), it);                             // 8  bits
+          it = std::copy(LIGHT_49_AND_50.begin(), LIGHT_49_AND_50.end(), it);                                               // 2  bits
+          it = std::copy(id(UNKNOWN_BITS_51_AND_52).begin(), id(UNKNOWN_BITS_51_AND_52).end(), it);                         // 2  bits
+          it = std::copy(CLEANING_POSITION_BITS_53_TO_56.begin(), CLEANING_POSITION_BITS_53_TO_56.end(), it);               // 4  bits
+          it = std::copy(SEAT_TEMP_BITS_57_TO_64.begin(), SEAT_TEMP_BITS_57_TO_64.end(), it);                               // 8  bits
+          it = std::copy(id(UNKNOWN_BITS_65_TO_68).begin(), id(UNKNOWN_BITS_65_TO_68).end(), it);                           // 4  bits
+          it = std::copy(CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72.begin(), CLEAN_PRESS_OR_DRY_TEMP_BITS_69_TO_72.end(), it);   // 4  bits
+          it = std::copy(id(UNKNOWN_BITS_73_TO_76).begin(), id(UNKNOWN_BITS_73_TO_76).end(), it);                           // 4  bits
+          it = std::copy(ECO_MODE_BITS_77_AND_78.begin(), ECO_MODE_BITS_77_AND_78.end(), it);                               // 2  bits
+          it = std::copy(id(UNKNOWN_BITS_79_TO_84).begin(), id(UNKNOWN_BITS_79_TO_84).end(), it);                           // 6  bits
+          it = std::copy(DEODORIZE_MODE_BITS_85_AND_86.begin(), DEODORIZE_MODE_BITS_85_AND_86.end(), it);                   // 2  bits
+          std::copy(id(UNKNOWN_BITS_87_AND_88).begin(), id(UNKNOWN_BITS_87_AND_88).end(), it);                              // 2  bits
+
+          // Start converting to pronto bit pairs to thier binary meanings for checksum calc
+
+          // Extract even bits (first bit of bit pair not required)
+          std::array<uint8_t, 40> bitsArrayEvenBits;
+          for (size_t i = 1, j = 0; i < checksumBitsArray.size(); i += 2, ++j) {
+              bitsArrayEvenBits[j] = checksumBitsArray[i];
+          }
+
+          // Replace 0x40 with 1 and 0x16 with 0
+          for (auto &element : bitsArrayEvenBits) {
+              if (element == 0x40) {
+                  element = 0x01;
+              } else if (element == 0x16) {
+                  element = 0x00;
+              }
+          }
+
+          // Create a new array in binary convention by setting individual bits based on bitsArrayEvenBits
+          std::array<uint8_t, 5> bytesInBinaryFormat = {0};
+          for (size_t i = 0; i < bitsArrayEvenBits.size(); ++i) {
+              bytesInBinaryFormat[i / 8] |= (bitsArrayEvenBits[i] & 0x01) << (7 - i % 8);
+          }
+
+          // Concatenate binary strings into a single string and log
+          std::string concatenatedBinaryString;
+          for (size_t i = 0; i < bytesInBinaryFormat.size(); ++i) {
+              char binaryString[9];  // Assuming 8-bit values
+              for (int j = 7; j >= 0; --j) {
+                  binaryString[7 - j] = ((bytesInBinaryFormat[i] >> j) & 0x01) + '0';
+              }
+              binaryString[8] = '\0';  // Null-terminate the string
+              concatenatedBinaryString += std::string(binaryString) + ((i < bytesInBinaryFormat.size() - 1) ? ", " : "");
+          }
+          // Log the concatenated binary string
+          ESP_LOGD("Custom", "%s[%s]", "Command Bytes Binary: ", concatenatedBinaryString.c_str());
+
+          // Create an array (bytesInDecimalFormat) by converting each byte to its decimal equivalent and log
+          std::array<uint8_t, 5> bytesInDecimalFormat;
+          for (size_t i = 0; i < bytesInBinaryFormat.size(); ++i) {
+              bytesInDecimalFormat[i] = bytesInBinaryFormat[i];
+          }
+
+          // Concatenate decimal values into a single string
+          std::string concatenatedDecimalString;
+          for (size_t i = 0; i < bytesInDecimalFormat.size(); ++i) {
+              concatenatedDecimalString += std::to_string(static_cast<int>(bytesInDecimalFormat[i])) + ((i < bytesInDecimalFormat.size() - 1) ? ", " : "");
+          }
+          // Log the concatenated decimal string along with the header
+          ESP_LOGD("Custom", "%s[%s]", "Command Bytes Decimal: ", concatenatedDecimalString.c_str());
+
+          // Calculate the checksumDecimal by summing the values in bytesInDecimalFormat
+          int checkSumDecimal = 0;
+          for (size_t i = 0; i < bytesInDecimalFormat.size(); ++i) {
+              checkSumDecimal += bytesInDecimalFormat[i];
+          }
+          // Modulo 256 required
+          checkSumDecimal %= 256;
+
+          // Convert checkSumDecimal to its binary representation
+          std::array<uint8_t, 8> checkSumBinary;
+          for (int i = 7; i >= 0; --i) {
+              checkSumBinary[i] = (checkSumDecimal >> (7 - i)) & 0x01;
+          }
+
+          // Display the value of checkSumDecimal in binary representation on one line
+          char binaryString[9];  // Assuming 8-bit values
+          for (int i = 7; i >= 0; --i) {
+              binaryString[7 - i] = ((checkSumDecimal >> i) & 0x01) + '0';
+          }
+          binaryString[8] = '\0';  // Null-terminate the string
+          // Log the CheckSum Binary string and CheckSum Decimal string on one line
+          ESP_LOGD("Custom", "CheckSum Binary: [%s], CheckSum Decimal: [%d]", binaryString, checkSumDecimal);
+
+
+          // Create a new array to store the checksum Pronto pairs to be generated.
+          std::array<uint8_t, 16> checksumProntoHex;
+
+          // Map each bit to the desired pairs in the new array
+          for (int i = 0; i < 8; ++i) {
+              // Extract the ith bit from the number
+              int bitValue = (checkSumDecimal >> (7 - i)) & 0x01;
+
+              // Determine the pair based on the bit value
+              uint8_t pair1 = (bitValue == 0) ? 0x14 : 0x14;
+              uint8_t pair2 = (bitValue == 0) ? 0x16 : 0x40;
+
+              // Map the pairs to the new array
+              checksumProntoHex[i * 2] = pair1;
+              checksumProntoHex[i * 2 + 1] = pair2;
+          }
+
+          // Log the the mapped array
+          char checksumPrintPronto[49];  // Assuming 16 pairs * (2 characters + 1 space) per pair + 1 null terminator
+          char* ptr = checksumPrintPronto;
+
+          for (size_t i = 0; i < checksumProntoHex.size(); ++i) {
+              if (i > 0) {
+                  *(ptr++) = ' ';  // Add space between pairs
+              }
+              ptr += snprintf(ptr, 3, "%02x", static_cast<int>(checksumProntoHex[i]));
+          }
+
+          //Change checksum value to new value
+          id(CHECKSUM_BITS_89_TO_104) = checksumProntoHex;
+
+          char checksumProntoHexString[5 * id(CHECKSUM_BITS_89_TO_104).size() + 1];  // Buffer size for hexadecimal values
+          int offset2 = 0;
+          for (size_t i = 0; i < id(CHECKSUM_BITS_89_TO_104).size(); ++i)
+              offset2 += snprintf(checksumProntoHexString + offset2, sizeof(checksumProntoHexString) - offset2, "%04x%s", static_cast<int>(id(CHECKSUM_BITS_89_TO_104)[i]), (i < id(CHECKSUM_BITS_89_TO_104).size() - 1) ? " " : "");
+          ESP_LOGD("Custom", "CheckSum Pronto Hex: [%s]", checksumProntoHexString);
+
+          //Concatenate all bits into complete code
+          std::array<uint16_t, 106> fullProntoBitsArray;
+          auto it2 = fullProntoBitsArray.begin();                                                                                     // Total 106
+          it2 = std::copy(id(PREAMBLE_BITS_1_TO_4).begin(), id(PREAMBLE_BITS_1_TO_4).end(), it2);                                     //         4
+          it2 = std::copy(id(LEAD_IN_BURST_PAIRS_BITS_5_TO_8).begin(), id(LEAD_IN_BURST_PAIRS_BITS_5_TO_8).end(), it2);               //         4
+          it2 = std::copy(checksumBitsArray.begin(), checksumBitsArray.end(), it2);                                                   //        80
+          it2 = std::copy(checksumProntoHex.begin(), checksumProntoHex.end(), it2);                                                   //        16
+          it2 = std::copy(id(LEAD_OUT_BURST_PAIRS_BITS_105_AND_106).begin(), id(LEAD_OUT_BURST_PAIRS_BITS_105_AND_106).end(), it2);   //         2
+
+
+          //Convert it into the special Pronto string format
+          char fullProntoBitsHexString[5 * fullProntoBitsArray.size() + 1];  // Buffer size for hexadecimal values
+          int offset3 = 0;
+          for (size_t i = 0; i < fullProntoBitsArray.size(); ++i) {
+              offset3 += snprintf(fullProntoBitsHexString + offset3, sizeof(fullProntoBitsHexString) - offset3, "%04X%s", static_cast<unsigned int>(fullProntoBitsArray[i]), (i < fullProntoBitsArray.size() - 1) ? " " : "");
+          }
+
+          ESP_LOGD("Custom", "Full Pronto Bits Hex: [%s]", fullProntoBitsHexString);
+
+          id(FULL_PRONTO_CODE_GLOBAL) = fullProntoBitsHexString;
+          //id(FULL_PRONTO_CODE_GLOBAL).publish_state(fullProntoBitsHexString);
+
+
+sensor:
+  - platform: uptime
+    name: Uptime
+    update_interval: 60s
+    accuracy_decimals: 1
+    unit_of_measurement: h
+    filters:
+    #Convert to decimal hrs.
+      - lambda: return x/60/60;
