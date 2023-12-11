@@ -1,9 +1,9 @@
 # Kogan SmarterHome™ Smart Antibacterial Wash & Dry Electric Bidet Toilet Seat
 
-This component provides ESPHome support for the Kogan SmarterHome™ Smart Antibacterial Wash & Dry Electric Bidet Toilet Seat. \
+This component provides ESPHome support for the Kogan SmarterHome™ Smart Antibacterial Wash & Dry Electric Bidet Toilet Seat.\
 
 Product Name:      KOGAN SMARTERHOME™ SMART ANTIBACTERIAL WASH & DRY ELECTRIC BIDET TOILET SEAT
-Product Listing:   https://www.kogan.com/au/buy/kogan-smarterhome-smart-antibacterial-wash-dry-electric-bidet-toilet-seat/ \
+Product Listing:   https://www.kogan.com/au/buy/kogan-smarterhome-smart-antibacterial-wash-dry-electric-bidet-toilet-seat/\
 Product Code:      KASMABIDETA \
 Product Manual:    https://assets.kogan.com/files/usermanuals/KASMABIDETA_UG_v2.pdf \
 
