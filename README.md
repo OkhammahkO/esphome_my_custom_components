@@ -1,2 +1,2 @@
 # esphome_my_custom_components
-ESPHome Custom Components that I've authored. test.
+ESPHome Custom Components that I've authored.
