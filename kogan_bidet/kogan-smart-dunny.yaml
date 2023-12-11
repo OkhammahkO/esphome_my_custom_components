@@ -49,14 +49,8 @@ wifi:
     static_ip: 192.168.1.128
     gateway: 192.168.1.1
     subnet: 255.255.255.0
+
 api:
-  services:
-    - service: send_pronto
-      variables:
-        data: string
-      then:
-      - remote_transmitter.transmit_pronto:
-          data: !lambda 'return data;'
 ota:
 
 logger:
@@ -67,11 +61,6 @@ remote_transmitter:
     number: 16
   carrier_duty_percent: 50% #May need to tweak
 
-# text_sensor:
-#   - platform: template
-#     id: FULL_PRONTO_CODE_GLOBAL
-#     name: "Pronto Code Str"
-#     update_interval: never
 
 button:
   - platform: template
@@ -82,7 +71,7 @@ button:
       - script.execute: generate_pronto_code_script
 
   - platform: template
-    name: All Off #Turn off all settings
+    name: All Off #Turn off all settings. For testing.
     id: all_off_button
     internal: false
     on_press:
@@ -105,8 +94,8 @@ button:
                   '
 
   - platform: template
-    name: Send Pronto Command
-    id: send_pronto_command
+    name: Transmit Pronto Code
+    id: transmit_proto_code
     internal: false
     on_press:
       - remote_transmitter.transmit_pronto:
@@ -424,7 +413,6 @@ script:
           std::copy(id(UNKNOWN_BITS_87_AND_88).begin(), id(UNKNOWN_BITS_87_AND_88).end(), it);                              // 2  bits
 
           // Start converting to pronto bit pairs to thier binary meanings for checksum calc
-
           // Extract even bits (first bit of bit pair not required)
           std::array<uint8_t, 40> bitsArrayEvenBits;
           for (size_t i = 1, j = 0; i < checksumBitsArray.size(); i += 2, ++j) {
@@ -554,7 +542,6 @@ script:
           ESP_LOGD("Custom", "Full Pronto Bits Hex: [%s]", fullProntoBitsHexString);
 
           id(FULL_PRONTO_CODE_GLOBAL) = fullProntoBitsHexString;
-          //id(FULL_PRONTO_CODE_GLOBAL).publish_state(fullProntoBitsHexString);
 
 
 sensor:
