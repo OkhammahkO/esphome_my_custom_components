@@ -25,7 +25,7 @@ OEM:               Tejjer https://tejjer.en.alibaba.com/productgrouplist-8256842
 
 
 ## Wiring
-| **Wire Colour** | **Function** | **Description**                         |
+| **Wire Colour** | **Function** | **Description**                         | 
 |-----------------|--------------|-----------------------------------------|
 | **Red**         | 5V           | Power to the wifi module                |
 | **Black**       | Ground       | Ground                                  |
