@@ -10,9 +10,9 @@ Product Manual:    https://assets.kogan.com/files/usermanuals/KASMABIDETA_UG_v2.
 
 ## Solution Overview
 * Control funtionality is the same as the app.
-* The Tuya WR3 wifi module is totally removed and replaced with an ESP of choice and re-attached to the MCU using a 3-wire JST connector in the same manner as the existing one. 
-* Communication is similar to an air conditioner remote and is one way only (cannot read any actual states, commands/states are "optimistic").
-* The ESP sends Pronto commands to the MCU over a single wire. The protocol was reverse engineered and includes checksum generation. 
+* The Tuya WR3 wifi module is totally removed and replaced with an ESP of choice and re-attached to the MCU using a 3-wire JST connector in the same manner as the existing one.  
+* Communication is similar to an air conditioner remote and is one way only (cannot read any actual states, commands/states are "optimistic").  
+* The ESP sends Pronto commands to the MCU over a single wire. The protocol was reverse engineered and includes checksum generation.  
 
 Example:
 
