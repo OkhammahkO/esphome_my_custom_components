@@ -11,18 +11,18 @@ OEM:               Tejjer https://tejjer.en.alibaba.com/productgrouplist-8256842
 
 ## Solution Overview:
 * Control funtionality is the same as the app.
-* The Tuya WR3 wifi module is totally removed and replaced with an ESP of choice and re-attached to the MCU using a 3-wire JST connector in the same manner as the existing one.
+* The Tuya WR3 wifi module assembly is totally removed and replaced with an ESP of choice and re-attached to the MCU using a 3-wire JST connector in the same manner as the existing one.
 * Communication is similar to an air conditioner remote and is one way only (cannot read any actual states, commands/states are "optimistic").
-* The ESP sends Pronto commands to the MCU over a single (blue) wire. The protocol was reverse engineered and includes checksum generation.
+* The ESP sends Pronto commands to the MCU over a single (blue) wire. The protocol was reverse engineered and includes checksum generation. 
 * Solution removes all Tuya communication - the device is yours.
-* You can't use the Tuya App after you do this (you just build whatever frontend you want in Home Assistant)
+* You can't use the Tuya App after you do this - you just build whatever Home Assistant frontend you want for your backend.
 
 ![image](https://github.com/OkhammahkO/esphome_my_custom_components/assets/43776617/9b7b1ba4-1bef-4b2c-b360-266b64056bd5)
 
 
 ## Details:
 * Some Bidets have a "traditional remote". It seems likely this bidet had a remote and a reciever set-up and the wifi remote just uses the same MCU port and protocol. So quite a half-arsed "smart" device;)
-
+* Tip: While you have it open, cvoer the buzzer with a bit of tape if you find the beeps too loud.
 
 ## Wiring
 | **Wire Colour** | **Function** | **Description**                         |  **ESP Wiring**  |
