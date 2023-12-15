@@ -1,5 +1,9 @@
 # Kogan SmarterHome™ Smart Antibacterial Wash & Dry Electric Bidet Toilet Seat
 
+Finally you can get your toilet out of the cloud and back down to earth!!!
+
+![image](https://github.com/OkhammahkO/esphome_my_custom_components/assets/43776617/12326551-d852-4b70-8c4d-cae6e001090d)
+ 
 This yaml provides ESPHome support for the Kogan SmarterHome™ Smart Antibacterial Wash & Dry Electric Bidet Toilet Seat.
 
 ## Product Details
