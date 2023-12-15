@@ -1,7 +1,7 @@
 # Kogan SmarterHome™ Smart Antibacterial Wash & Dry Electric Bidet Toilet Seat
 
 ## The Future Is Now!!
-Finally you can get stop your toilet from phoning foreign governments and get it out of the cloud and back down to earth!!!
+Finally you can stop your toilet from phoning foreign governments and get it out of the cloud and back down to earth!!!
 
 ![image](https://github.com/OkhammahkO/esphome_my_custom_components/assets/43776617/12326551-d852-4b70-8c4d-cae6e001090d)
  
