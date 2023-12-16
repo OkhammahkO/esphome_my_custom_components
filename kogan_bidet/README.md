@@ -45,6 +45,15 @@ OEM:               Tejjer https://tejjer.en.alibaba.com/productgrouplist-8256842
 ## Teardown
 ![image](https://github.com/OkhammahkO/esphome_my_custom_components/assets/43776617/f63378d9-b8c1-418d-99a5-042ef7a8c15d)
 
+## Instructions:
+Parts list:
+1.	An ESP32 (or ESP8266). I used an S2 mini I had spare. https://community.home-assistant.io/t/whats-your-favourite-esp32-board-best-good-cheap-quality-reliable/380023/68?u=mahko_mahko
+2.	JST connector: I don’t know specific type, I just grabbed one that matched from a kit I got a while back. 
+3.	Wire. I really like working with flexible silicone wire. 
+4.	Some small zip-ties (to replace the ones you’ll cut inside the loo). Optional but probably a good idea.
+
+
+
 Example:
 
 ```
