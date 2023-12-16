@@ -17,7 +17,7 @@ OEM:               Tejjer https://tejjer.en.alibaba.com/productgrouplist-8256842
 ## Solution Overview:
 * Control funtionality is the same as the app.
 * Solution removes all Tuya communication - the device is yours.
-* Communication is similar to an air conditioner remote and is one way only. You cannot read any actual states. Commands and states are "optimistic".
+* Communication is similar to an air conditioner remote and is one way only. This means commands and states are "optimistic".
 * The ESP sends Pronto commands to the MCU over a single (blue) wire. The protocol was reverse engineered and includes checksum generation. 
 * You can't use the Tuya App after you do this - you just build whatever Home Assistant frontend you want for your backend.
 * The Tuya WR3 wifi module assembly is removed and replaced with an ESP of choice and re-attached to the MCU using a 3-wire JST connector in the same manner as the existing one.
