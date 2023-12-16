@@ -21,7 +21,7 @@ OEM:               Tejjer https://tejjer.en.alibaba.com/productgrouplist-8256842
 * The ESP sends Pronto commands to the MCU over a single (blue) wire. The protocol was reverse engineered and includes checksum generation. 
 * You can't use the Tuya App after you do this - you just build whatever Home Assistant frontend you want for your backend.
 * The Tuya WR3 wifi module assembly is removed and replaced with an ESP of choice and re-attached to the MCU using a 3-wire JST connector in the same manner as the existing one.
-* A benefit of doing it this way is that the solutuin is reversable (you can reinstall the Tuya module), and also you can use the Tuya module "on the bench" to further explore potentially undiscovered parts of the protocol.   
+* A benefit of doing it this way is that the solution is reversable (you can reinstall the Tuya module), and also you can use the Tuya module "on the bench" to further explore potentially undiscovered parts of the protocol.   
 
 ![image](https://github.com/OkhammahkO/esphome_my_custom_components/assets/43776617/9b7b1ba4-1bef-4b2c-b360-266b64056bd5)
 
