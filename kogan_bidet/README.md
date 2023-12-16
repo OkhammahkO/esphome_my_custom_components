@@ -27,8 +27,8 @@ OEM:               Tejjer https://tejjer.en.alibaba.com/productgrouplist-8256842
 
 
 ## Details:
-* Some Bidets have a "traditional remote". It seems likely this bidet had a remote and a reciever set-up and the wifi remote just uses the same MCU port and protocol. So quite a half-arsed "smart" device;)
-* Tip: While you have it open, cover the buzzer with a bit of tape etc if you find the beeps too loud.
+* Some Bidets have a "traditional remote". It seems likely this bidet was originally designed with a more tradtional remote and reciever set-up and the wifi remote just uses the same MCU port and protocol. So quite a half-arsed "smart" device;)
+* Tip: While you have it open, cover the buzzer with a bit of tape etc if you find the beeps too loud. I used a bit of Sugru, which actually makes it barely audible. 
 * Protocol decoding: See table in .yaml file.
 
 ## Wiring
