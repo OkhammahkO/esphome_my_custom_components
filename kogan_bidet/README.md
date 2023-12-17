@@ -52,23 +52,24 @@ OEM:               Tejjer https://tejjer.en.alibaba.com/productgrouplist-8256842
 
 **Instructions:**
 1. **Build your new ESPHome wifi assembly**
-    a. Connect the wires to the ESP (soldering recommended) and crimp the JST connection on the other end. Match the wire order and JST orientation to the original.
-    b. **A bit of hot glue may be a good idea** to help with some wire strain relief.
-    c. Probably you could buy one instead which might be easier if you don’t have a kit and crimper on hand.
-    d. I also used a male JST to build a little JST to Dupont adapter for sniffing and powering the Tuya module. **You shouldn’t really need one of those though.**
+   - a. Connect the wires to the ESP (soldering recommended) and crimp the JST connection on the other end. Match the wire order and JST orientation to the original.
+   - b. **A bit of hot glue may be a good idea** to help with some wire strain relief.
+   - c. Probably you could buy one instead which might be easier if you don’t have a kit and crimper on hand.
+   - d. I also used a male JST to build a little JST to Dupont adapter for sniffing and powering the Tuya module. **You shouldn’t really need one of those though.**
 
 2. **Print a new enclosure (optional). TODO: Publish 3d print model.**
 
 3. **Flash it with the ESPHome firmware.**
-    a. Follow the usual process.
-    b. You can use the USB connector on your ESP while doing this and to check it seems to be working ok before you install it (check the logs look ok when you change user inputs).
-    c. Later when installed, you power and ground it via the JST and respective pins.
+   - a. Follow the usual process.
+   - b. You can use the USB connector on your ESP while doing this and to check it seems to be working ok before you install it (check the logs look ok when you change user inputs).
+   - c. Later when installed, you power and ground it via the JST and respective pins.
 
 4. **Open the bidet, remove the old wifi assembly, and install the new one.**
-    a. To open the bidet, there are two screws underneath that come out, and then you’ll see some clip things along the back edge to help keep it in. If you pry up near these clips carefully, the base will pop off/out (say with a flat head screwdriver or pry tools).
-    b. Be careful not to put too much stress on the various wires as you remove the base and orient it so you have access. Should all be fine, just be a little careful.
-    c. Locate the Tuya module and remove the screw. Locate the JST port on the MCU and remove it. Note the wire routing. Clip a few zip ties then totally remove it.
-    d. Install the new one by reversing steps above.
+   - a. To open the bidet, there are two screws underneath that come out, and then you’ll see some clip things along the back edge to help keep it in. If you pry up near these clips carefully, the base will pop off/out (say with a flat head screwdriver or pry tools).
+   - b. Be careful not to put too much stress on the various wires as you remove the base and orient it so you have access. Should all be fine, just be a little careful.
+   - c. Locate the Tuya module and remove the screw. Locate the JST port on the MCU and remove it. Note the wire routing. Clip a few zip ties then totally remove it.
+   - d. Install the new one by reversing steps above.
+
 
 
 
