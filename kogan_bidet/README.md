@@ -38,7 +38,7 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
 | **Black**       | Ground       | Ground                                  | Ground           |
 | **Blue**        | TX           | Data transfer from wifi module to MCU.  | GPIO             |
 
-## Wifi module assembly:  
+## Wifi Module Assembly Overview:  
 ![image](https://github.com/OkhammahkO/esphome_my_custom_components/assets/43776617/ab443657-ad65-4f80-bbfc-16eceab5a957)
 
 ## Teardown
