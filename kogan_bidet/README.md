@@ -79,7 +79,7 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
    - Dunny light on when you walk in the bathroom at night could be handy. Give everyone thier best chance of success!
 
 ## Credits: 
-I got lots of help from ESPHome Discord users  @ssieb , @jesserockz , @Clyde &  @Cossid - especially for decoding the protocol.  
+I got lots of help from ESPHome Discord users  ssieb , jesserockz , Clyde &  Cossid - especially for decoding the protocol.  
 
 ## Got Questions?
 Ask on the Discord Show-off: https://discord.com/channels/429907082951524364/1185849144573693982  
