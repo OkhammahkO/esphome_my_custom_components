@@ -51,7 +51,7 @@ Parts list:
 4.	Some small zip-ties (to replace the ones you’ll cut inside the loo). Optional but probably a good idea.
 Instructions:
 1.	Build your new ESPHome wifi assembly 
-   1.1	Connect the wires to the ESP (soldering recommended) and crimp the JST connection on the other end. Match the wire order and JST orientation to the original. 
+   1.	Connect the wires to the ESP (soldering recommended) and crimp the JST connection on the other end. Match the wire order and JST orientation to the original. 
   b.	A bit of hot glue may be a good idea to help with some wire strain relief.
   c.	Probably you could buy one instead which might be easier if you don’t have a kit and crimper on hand.
 d.	I also used a male JST to build a little JST to Dupont adapter for sniffing and powering the Tuya module. You shouldn’t really need one of those though.
