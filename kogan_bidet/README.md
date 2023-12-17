@@ -53,7 +53,7 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
 **Instructions:**
 1. **Build your new ESPHome wifi assembly**
    - Connect the wires to the ESP (soldering recommended) and crimp the JST connection on the other end. Match the wire order and JST orientation to the original.
-   - **A bit of hot glue may be a good idea** to help with some wire strain relief.
+   - A bit of hot glue may be a good idea to help with some wire strain relief.
    - Probably you could buy one instead which might be easier if you don’t have a kit and crimper on hand.
    - I also used a male JST to build a little JST to Dupont adapter for sniffing and powering the Tuya module. You shouldn’t really need one of those though.
 
@@ -62,7 +62,7 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
 3. **Flash it with the ESPHome firmware.**
    - Follow the usual process.
    - You can use the USB connector on your ESP while doing this and to check it seems to be working ok before you install it (check the logs look ok when you change user inputs).
-   - Later when installed, you power and ground it via the JST and respective pins.
+   - Later when installed, you power and ground it via the JST and respective pins (not via usb).
 
 4. **Open the bidet, remove the old wifi assembly, and install the new one.**
    - To open the bidet, there are two screws underneath that come out, and then you’ll see some clip things along the back edge to help keep it in. If you pry up near these clips carefully, the base will pop off/out (say with a flat head screwdriver or pry tools).
@@ -77,10 +77,3 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
    - You can set bidet temperatures you want (water, seat) based on ambient temperatures of your bathroom – heat more when it’s needed.
    - Dunny light on when you walk in the bathroom at night could be handy. Give everyone thier best chance of success!
 
-
-Example:
-
-```
-todo: my_yaml
-
-```
