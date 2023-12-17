@@ -70,6 +70,12 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
    - Locate the Tuya module and remove the screw. Locate the JST port on the MCU and remove it. Note the wire routing. Clip a few zip ties then totally remove it.
    - Install the new one by reversing steps above.
 
+## FAQs:
+1.	**This is weird. Why would you even want to automate a smart bidet?**
+   - Because you can.
+   - To optimise power management.
+   - You can set bidet temperatures you want (water, seat) based on ambient temperatures of your bathroom – heat more when it’s needed.
+   - Dunny light on when you walk in the bathroom at night could be handy.
 
 
 Example:
