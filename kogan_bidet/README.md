@@ -45,7 +45,7 @@ OEM:               Tejjer https://tejjer.en.alibaba.com/productgrouplist-8256842
 ![image](https://github.com/OkhammahkO/esphome_my_custom_components/assets/43776617/f63378d9-b8c1-418d-99a5-042ef7a8c15d)
 
 **Parts list:**
-1. An ESP32 (or ESP8266). I used an S2 mini I had spare.
+1. An **ESP32** (or ESP8266). I used an S2 mini I had spare.
 2. **JST connector:** I don’t know the specific type; I just grabbed one that matched from a kit I got a while back. To confirm the size/type, you may need to pull out the Tuya wifi assembly and measure up.
 3. **Wire:** I really like working with flexible silicone wire.
 4. **Small zip-ties:** (to replace the ones you’ll cut inside the loo). Optional but probably a good idea.
@@ -69,10 +69,6 @@ OEM:               Tejjer https://tejjer.en.alibaba.com/productgrouplist-8256842
    - Be careful not to put too much stress on the various wires as you remove the base and orient it so you have access. Should all be fine, just be a little careful.
    - Locate the Tuya module and remove the screw. Locate the JST port on the MCU and remove it. Note the wire routing. Clip a few zip ties then totally remove it.
    - Install the new one by reversing steps above.
-
-
-
-
 
 
 
