@@ -21,14 +21,14 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
 * The ESP sends Pronto commands to the MCU over a single (blue) wire. The protocol was reverse engineered and includes checksum generation. 
 * You can't use the Tuya App after you do this - you just build whatever Home Assistant frontend you want for your backend.
 * The Tuya WR3 wifi module assembly is removed and replaced with an ESP of choice and re-attached to the MCU using a 3-wire JST connector in the same manner as the existing one.
-* A benefit of doing it this way is that the solution is reversable (you can reinstall the Tuya module), and also you can use the Tuya module "on the bench" to further explore potentially undiscovered parts of the protocol.   
-* It's not a custom component, just a yaml configuration.
+* A benefit of doing it this way is that the solution is reversible (you can reinstall the Tuya module), and also you can use the Tuya module "on the bench" to further explore potentially undiscovered parts of the protocol.   
+* This is not a custom component, just a yaml configuration - use it as such.
 
 ![image](https://github.com/OkhammahkO/esphome_my_custom_components/assets/43776617/9b7b1ba4-1bef-4b2c-b360-266b64056bd5)
 
 
 ## Details:
-* Some Bidets have a "traditional remote". It seems likely this bidet was originally designed with a more tradtional remote and reciever set-up and the wifi remote just uses the same MCU port and protocol. So quite a half-arsed "smart" device;)
+* Many bidets have a more traditional remote and reciever set-up. It seems likely this bidet was originally designed this way and was adpated so that the wifi remote uses the same MCU port and protocol. So quite a half-arsed "smart" device;)
 * Tip: While you have it open, cover the buzzer with a bit of tape etc if you find the beeps too loud. I used a bit of Sugru, which actually makes it barely audible. 
 * Protocol decoding: See table in .yaml file.
 
@@ -48,14 +48,14 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
 **Parts list:**
 1. An **ESP32** (or ESP8266). I used a S2 mini I had spare.
 2. **JST connector:** I don’t know the specific type/size. I just grabbed one that matched from a kit I got a while back. To confirm the size/type, you may need to pull out the Tuya wifi assembly and measure up.
-3. **Wire:** I really like working with flexible silicone wire.
+3. **Wire:** I really like working with flexible silicone wire. But any suitable wire is fine.
 4. **Small zip-ties:** (to replace the ones you’ll cut inside the loo). Optional but probably a good idea.
 
 **Instructions:**
 1. **Build your new ESPHome wifi assembly**
    - Connect the wires to the ESP (soldering recommended) and crimp the JST connection on the other end. Match the wire order and JST orientation to the original.
    - A bit of hot glue may be a good idea to help with some wire strain relief.
-   - Probably you could buy one instead which might be easier if you don’t have a kit and crimper on hand.
+   - Probably you could buy one instead which might be easier if you don’t have a kit and crimper on hand. Or you could sacrifice the existing one (cut wires and solder to new ESP). 
    - I also used a male JST to build a little JST to Dupont adapter for sniffing and powering the Tuya module. You shouldn’t really need one of those though.
 
 2. **Print a new enclosure (optional). TODO: Publish 3d print model.**
@@ -68,7 +68,7 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
 4. **Open the bidet, remove the old wifi assembly, and install the new one.**
    - To open the bidet, there are two screws underneath that come out, and then you’ll see some clip things along the back edge to help keep it in. If you pry up near these clips carefully, the base will pop off/out (say with a flat head screwdriver or pry tools).
    - Be careful not to put too much stress on the various wires as you remove the base and orient it so you have access. Should all be fine, just be a little careful.
-   - Locate the Tuya module and remove the screw. Locate the JST port on the MCU and remove it. Note the wire routing. Clip a few zip ties then totally remove it.
+   - Locate the Tuya module and remove the screw. Locate the JST port on the MCU and carefully remove it. Note the wire routing. Clip a few zip ties then totally remove it.
    - Install the new one by reversing steps above.
 
 ## FAQs:
@@ -79,7 +79,7 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
    - Dunny light on when you walk in the bathroom at night could be handy. Give everyone thier best chance of success!
 
 ## Credits: 
-I got lots of help from ESPHome Discord users  ssieb , jesserockz , Clyde &  Cossid - especially for decoding the protocol.  
+I got lots of help from ESPHome Discord users  ssieb , jesserockz , Clyde &  Cossid - especially for decoding the protocol and the checksum part.  
 
 ## Got Questions?
 Ask on the Discord Show-off: https://discord.com/channels/429907082951524364/1185849144573693982  
