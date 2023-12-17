@@ -75,7 +75,7 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
    - Because you can.
    - To optimise power management.
    - You can set bidet temperatures you want (water, seat) based on ambient temperatures of your bathroom – heat more when it’s needed.
-   - Dunny light on when you walk in the bathroom at night could be handy.
+   - Dunny light on when you walk in the bathroom at night could be handy. Give everyone thier best chance of success!
 
 
 Example:
