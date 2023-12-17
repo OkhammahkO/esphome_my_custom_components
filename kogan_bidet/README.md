@@ -45,8 +45,8 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
 ![image](https://github.com/OkhammahkO/esphome_my_custom_components/assets/43776617/f63378d9-b8c1-418d-99a5-042ef7a8c15d)
 
 **Parts list:**
-1. An **ESP32** (or ESP8266). I used an S2 mini I had spare.
-2. **JST connector:** I don’t know the specific type; I just grabbed one that matched from a kit I got a while back. To confirm the size/type, you may need to pull out the Tuya wifi assembly and measure up.
+1. An **ESP32** (or ESP8266). I used a S2 mini I had spare.
+2. **JST connector:** I don’t know the specific type/size. I just grabbed one that matched from a kit I got a while back. To confirm the size/type, you may need to pull out the Tuya wifi assembly and measure up.
 3. **Wire:** I really like working with flexible silicone wire.
 4. **Small zip-ties:** (to replace the ones you’ll cut inside the loo). Optional but probably a good idea.
 
@@ -55,7 +55,7 @@ OEM:       Tejjer https://tejjer.en.alibaba.com/productgrouplist-825684272/Austr
    - Connect the wires to the ESP (soldering recommended) and crimp the JST connection on the other end. Match the wire order and JST orientation to the original.
    - **A bit of hot glue may be a good idea** to help with some wire strain relief.
    - Probably you could buy one instead which might be easier if you don’t have a kit and crimper on hand.
-   - I also used a male JST to build a little JST to Dupont adapter for sniffing and powering the Tuya module. **You shouldn’t really need one of those though.**
+   - I also used a male JST to build a little JST to Dupont adapter for sniffing and powering the Tuya module. You shouldn’t really need one of those though.
 
 2. **Print a new enclosure (optional). TODO: Publish 3d print model.**
 
